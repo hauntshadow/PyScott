@@ -1,6 +1,21 @@
-import bs4
+import urllib2
+from bs4 import BeautifulSoup
+import pprint
 
-print("test")
 
-print(bs4)
+req = urllib2.Request('http://www.imdb.com/title/tt0114709/?ref_=chttp_tt_102')
+response = urllib2.urlopen(req)
+html = (response.read())
 
+
+#print(html)
+#with open("test.html", "w") as myfile:
+#    myfile.write(html)
+
+soup = BeautifulSoup(html)
+
+print soup
+
+print(soup.find_all("div", "titlePageSprite star-box-giga-star"))
+
+#print len(soup.find_all('<div class="titlePageSprite star-box-giga-star"> 8.3 </div>'))
