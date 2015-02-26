@@ -14,8 +14,11 @@ html = (response.read())
 
 soup = BeautifulSoup(html)
 
-print soup
+print soup.prettify()
 
-print(soup.find_all("div", "titlePageSprite star-box-giga-star"))
+
+result = soup.find_all("div", "titlePageSprite star-box-giga-star")[0]
+print str(result)
+print(result.renderContents())
 
 #print len(soup.find_all('<div class="titlePageSprite star-box-giga-star"> 8.3 </div>'))
