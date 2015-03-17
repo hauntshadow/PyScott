@@ -1,6 +1,6 @@
 import urllib2
 from bs4 import BeautifulSoup
-import time
+import socket
 '''Opens the selected URL and stores the html in the html variable'''
 #req = urllib2.Request('http://www.imdb.com/title/tt0114709')
 #response = urllib2.urlopen(req)
@@ -25,35 +25,39 @@ import time
 '''prints the title and rating'''
 #print(title.renderContents())
 #print(rating.renderContents())
-count = 0.0
-avg = 0.0
-sum = 0.0
-for x in range(1,2381941):
-
-    req = urllib2.Request('http://www.imdb.com/title/tt'+str(x))
-    try:
-        response = urllib2.urlopen(req)
-    except urllib2.URLError:
-        print 'Connection timed out.'
-    html = (response.read())
-    soup = BeautifulSoup(html)
 
 
-    if ( soup.find_all("span","itemprop")):
-        title = soup.find_all("span","itemprop")[0]
-        print(title.renderContents())
+def ratingGenerator():
+    timeout = 30
+    socket.setdefaulttimeout(timeout)
+    mylist = range(1,2908446)
+    for x in mylist:
+        req = urllib2.Request('http://www.imdb.com/title/tt'+str(x))
+        try:
+            response = urllib2.urlopen(req)
+        except urllib2.URLError:
+            print 'Connection timed out.'
+        html = (response.read())
+        soup = BeautifulSoup(html)
 
-    if ( soup.find_all("div", "titlePageSprite star-box-giga-star")):
-        rating = soup.find_all("div", "titlePageSprite star-box-giga-star")[0]
-        print(rating.renderContents())
-        sum = sum + float(rating.renderContents())
-    else:
-        print "No rating"
-    count = count + 1
-    print x
-    if ((x % 300) == 0):
-        time.sleep(10)
+        if ( soup.find_all("span","itemprop")):
+            title = soup.find_all("span","itemprop")[0]
+            '''print(title.renderContents())'''
+            title = (title.renderContents())
+            if ( soup.find_all("div", "titlePageSprite star-box-giga-star")):
+                rating = soup.find_all("div", "titlePageSprite star-box-giga-star")[0]
+                '''print(rating.renderContents())'''
+                rating = rating.renderContents()
+                rating = rating.replace(' ', '')
+                yield (title,rating,x)
+            else:
+                '''print "No rating"'''
+                rating = '-1'
+                yield (title, rating,x)
+        else:
+            '''print"No Movie"'''
+            yield ('-1','-1',x)
 
-avg = sum / count
-print avg
-
+newGen = ratingGenerator()
+for x in newGen:
+    print(x)
