@@ -58,6 +58,3 @@ def ratingGenerator():
             '''print"No Movie"'''
             yield ('-1','-1',x)
 
-newGen = ratingGenerator()
-for x in newGen:
-    print(x)
