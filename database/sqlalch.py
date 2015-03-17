@@ -5,13 +5,14 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 from sqlalchemy import Column, Integer, String
-class Movie(Base):
-    __tablename__ = 'movies'
+class User(Base):
+    __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    title = Column(String)
-    rating = Column(Integer)
+    name = Column(String)
+    fullname = Column(String)
+    password = Column(String)
     def __repr__(self):
-       return "<Movie(id='%d', title='%s', rating='%s')>" % (self.id, self.title, self.rating)
+       return "<User(name='%s', fullname='%s', password='%s')>" % (self.name, self.fullname, self.password)
 
 print User 
 #Table('users', MetaData(bind=None),
