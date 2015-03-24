@@ -12,17 +12,21 @@ class Movie(Base):
     rating = Column(Integer)
     review = Column(String)
     def __repr__(self):
-       return "<Movie(id='%d', title='%s', rating='%s', review='%s')>" % (self.id, self.title, self.rating, self.review)
+       return "<Movie(id='%d', title='%s', rating='%d', review='%s')>" % (self.id, self.title, self.rating, self.review)
 
 class Director(Base):
     __tablename__ = 'Directors'
     id = Column(Integer, primary_key=True)
     movie = Column(Movie)
+    def __repr__(self):
+       return "<Director(id='%d', movie = '%s')>" % (self.id, self.movie)
     
 class Actor(Base):
     __tablename__ = 'Actors'
     id = Column(Integer, primary_key=True)
     movie = Column(Movie)
+    def __repr__(self):
+       return "<Actor(id='%d', movie='%s')>" % (self.id, self.movie)
 
 #Table('users', MetaData(bind=None),
 #            Column('id', Integer(), table=<users>, primary_key=True, nullable=False),
