@@ -1,11 +1,11 @@
-from sqlalchemy import create_engine
-engine = create_engine('sqlite:///:memory:', echo=True)
-
+from sqlalchemy import *
+engine = create_engine('postgresql:///:postgres:@localhost/database', echo=True)
+metadata = MetaData()
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
-from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
+
 
 class Movie(Base):
     __tablename__ = 'Movies'
@@ -34,18 +34,21 @@ class Actor(Base):
     def __repr__(self):
        return "<Actor(id='%d', name='%s', movie_id='%d')>" % (self.id, self.name, self.movie_id)
 
-#Table('Movie', MetaData(bind=None),
-#            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
-#            Column('title', String(), table=<Movie>),
-#            Column('rating', Integer(), table=<Movie>),
-#            Column('review', String(), table=<Movie>), schema=None)
-#
-#Table('Director', MetaData(bind=None),
-#            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
-#            Column('movie', String(), table=<Movie>),
-#
-#Table('Movie', MetaData(bind=None),
-#            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
-#            Column('movie', String(), table=<Movie>),
+Movie = Table('Movie', metadata,
+            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
+            Column('title', String(), table=<Movie>, nullable=False),
+            Column('rating', Integer(), table=<Movie>, nullable=False),
+            Column('review', String(), table=<Movie>)
+)
 
+Director = Table('Director', metadata,
+            Column('id', Integer(), table=<Director>, primary_key=True, nullable=False),
+            Column('movie', String(), table=<Director>, nullable=False)
+)
 
+Actor = Table('Actor', metadata,
+            Column('id', Integer(), table=<Actor>, primary_key=True, nullable=False),
+            Column('movie', String(), table=<Actor>, nullable=False)
+)
+
+metadata.create_all(engine)
