@@ -1,10 +1,13 @@
 from sqlalchemy import *
-engine = create_engine('postgresql+psycopg2:///postgres:password@localhost:5432/pyscottdb', echo=True)
-metadata = MetaData()
+from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
-
 from sqlalchemy.orm import relationship, backref, sessionmaker
+from settings import DATABASE
+
+Base = declarative_base()
+metadata = MetaData()
+engine = create_engine(URL(**DATABASE), echo=True);
+#engine = create_engine('postgresql:///david@localhost:5432/pyscottdb', echo=True)
 session = sessionmaker(bind=engine)()
 
 
@@ -42,6 +45,12 @@ Movie = Table('Movie', metadata,
             Column('review', String(),)
 )
 
+Movie2 = Table('Movie', metadata,
+            Column('id', Integer(), primary_key=True, nullable=False),
+            Column('title', String(), nullable=False),
+            Column('rating', Integer(), nullable=False),
+            Column('review', String(),)
+)
 Director = Table('Director', metadata,
             Column('id', Integer(), primary_key=True, nullable=False),
             Column('movie', String(), nullable=False)
