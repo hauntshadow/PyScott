@@ -1,10 +1,11 @@
 from sqlalchemy import *
-engine = create_engine('postgresql:///:postgres:@localhost/database', echo=True)
+engine = create_engine('postgresql+psycopg2:///postgres:password@localhost:5432/pyscottdb', echo=True)
 metadata = MetaData()
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, sessionmaker
+session = sessionmaker(bind=engine)()
 
 
 class Movie(Base):
@@ -35,20 +36,21 @@ class Actor(Base):
        return "<Actor(id='%d', name='%s', movie_id='%d')>" % (self.id, self.name, self.movie_id)
 
 Movie = Table('Movie', metadata,
-            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
-            Column('title', String(), table=<Movie>, nullable=False),
-            Column('rating', Integer(), table=<Movie>, nullable=False),
-            Column('review', String(), table=<Movie>)
+            Column('id', Integer(), primary_key=True, nullable=False),
+            Column('title', String(), nullable=False),
+            Column('rating', Integer(), nullable=False),
+            Column('review', String(),)
 )
 
 Director = Table('Director', metadata,
-            Column('id', Integer(), table=<Director>, primary_key=True, nullable=False),
-            Column('movie', String(), table=<Director>, nullable=False)
+            Column('id', Integer(), primary_key=True, nullable=False),
+            Column('movie', String(), nullable=False)
 )
 
 Actor = Table('Actor', metadata,
-            Column('id', Integer(), table=<Actor>, primary_key=True, nullable=False),
-            Column('movie', String(), table=<Actor>, nullable=False)
+            Column('id', Integer(), primary_key=True, nullable=False),
+            Column('movie', String(), nullable=False)
 )
 
 metadata.create_all(engine)
+
