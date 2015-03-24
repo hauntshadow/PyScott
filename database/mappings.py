@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 from settings import DATABASE
 
 Base = declarative_base()
-metadata = MetaData()
+meta = MetaData()
 engine = create_engine(URL(**DATABASE), echo=True);
 #engine = create_engine('postgresql:///david@localhost:5432/pyscottdb', echo=True)
 session = sessionmaker(bind=engine)()
@@ -38,28 +38,23 @@ class Actor(Base):
     def __repr__(self):
        return "<Actor(id='%d', name='%s', movie_id='%d')>" % (self.id, self.name, self.movie_id)
 
-Movie = Table('Movie', metadata,
+Movie = Table('Movie', meta,
             Column('id', Integer(), primary_key=True, nullable=False),
             Column('title', String(), nullable=False),
             Column('rating', Integer(), nullable=False),
-            Column('review', String(),)
+            Column('review', String(),),
+	    schema='public'
 )
 
-Movie2 = Table('Movie', metadata,
-            Column('id', Integer(), primary_key=True, nullable=False),
-            Column('title', String(), nullable=False),
-            Column('rating', Integer(), nullable=False),
-            Column('review', String(),)
-)
-Director = Table('Director', metadata,
+Director = Table('Director', meta,
             Column('id', Integer(), primary_key=True, nullable=False),
             Column('movie', String(), nullable=False)
 )
 
-Actor = Table('Actor', metadata,
+Actor = Table('Actor', meta,
             Column('id', Integer(), primary_key=True, nullable=False),
             Column('movie', String(), nullable=False)
 )
 
-metadata.create_all(engine)
+meta.create_all(engine)
 
