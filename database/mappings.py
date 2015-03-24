@@ -4,7 +4,9 @@ engine = create_engine('sqlite:///:memory:', echo=True)
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, backref
+
 class Movie(Base):
     __tablename__ = 'Movies'
     id = Column(Integer, primary_key=True)
@@ -17,20 +19,33 @@ class Movie(Base):
 class Director(Base):
     __tablename__ = 'Directors'
     id = Column(Integer, primary_key=True)
-    movie = Column(Movie)
+    name = Column(String)
+    movie_id = Column(Integer, ForeignKey('Movie.id'))
+    movie = relationship("Movie", backref = backref('Director', order_by = id))
     def __repr__(self):
-       return "<Director(id='%d', movie = '%s')>" % (self.id, self.movie)
-    
+       return "<Director(id='%d', name='%s', movie_id='%d')>" % (self.id, self.name, self.movie_id)
+ 
 class Actor(Base):
     __tablename__ = 'Actors'
     id = Column(Integer, primary_key=True)
-    movie = Column(Movie)
+    name = Column(String)
+    movie_id = Column(Integer, ForeignKey('Movie.id'))
+    movie = relationship("Movie", backref = backref('Actor', order_by = id))
     def __repr__(self):
-       return "<Actor(id='%d', movie='%s')>" % (self.id, self.movie)
+       return "<Actor(id='%d', name='%s', movie_id='%d')>" % (self.id, self.name, self.movie_id)
 
-#Table('users', MetaData(bind=None),
-#            Column('id', Integer(), table=<users>, primary_key=True, nullable=False),
-#            Column('name', String(), table=<users>),
-#            Column('fullname', String(), table=<users>),
-#            Column('password', String(), table=<users>), schema=None)
+#Table('Movie', MetaData(bind=None),
+#            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
+#            Column('title', String(), table=<Movie>),
+#            Column('rating', Integer(), table=<Movie>),
+#            Column('review', String(), table=<Movie>), schema=None)
+#
+#Table('Director', MetaData(bind=None),
+#            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
+#            Column('movie', String(), table=<Movie>),
+#
+#Table('Movie', MetaData(bind=None),
+#            Column('id', Integer(), table=<Movie>, primary_key=True, nullable=False),
+#            Column('movie', String(), table=<Movie>),
+
 
