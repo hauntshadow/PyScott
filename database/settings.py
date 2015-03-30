@@ -14,5 +14,5 @@ DI_DATABASE = {
     'port': 5432,
     'username': 'postgres',
     'password': 'pyscott123',
-    'database': 'pyscottdb2'
+    'database': 'pyscottdb'
 }
